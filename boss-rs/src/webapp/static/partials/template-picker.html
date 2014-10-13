@@ -1,0 +1,51 @@
+<div>
+	<div class="panel">
+		<div class="panel-heading">
+			<a href="#/">Dashboard</a> &raquo; Templates
+		</div>
+		
+		<template-upload></template-upload>
+
+		<div class="row row-top-margin">
+			<div class = "col-lg-12">
+				<h3 class = "template-header">Choose a Template</h3>
+				<hr>
+				<div class "row fluid" ng-repeat="template in templates">   <!-- ng-repeat="template in templates" -->
+					<div class="col-lg-6"> 
+						<h5> {{ template.name }} </h5>
+						<a href="{{template.url}}" target="_blank" class="preview thumbnail" style="background-image: url({{ template.previewUrl }}); background-size: cover;" ng-click="previewTemplate($event,template);">
+							<!--<img alt="{{ template.name + ' template preview' }}" title="{{ template.name + 	' template preview' }}" ng-src="{{ template.previewUrl }}">-->
+							<button type="button" class="btn-teal btn btn-default template-preview">Preview</button>
+							<button type="button" class="btn btn-default template-select" ng-click="importTemplate($event,template);$event.stopPropogation();">Apply</button>
+						</a>
+					<div class = "preview-margin"></div>
+				</div>
+			</div>
+		</div>
+		
+		<!--<template-external></template-external>-->
+
+		<div id="template-import-modal" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Importing Template</h4>
+					</div>
+					<div class="modal-body">
+						<p style="text-align:center;" ng-hide="!!importError">
+							Importing&hellip;<br>
+							<i class="icon-cog icon-spin" style="font-size: 12em;"></i>
+						</p>
+						<p style="text-align:center;" ng-show="!!importError">
+							Error Importing Template<br>
+							<i class="icon-frown" style="font-size: 12em;"></i>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" ng-show="!!importError">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div> <!-- panel heading -->
+</div>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Login</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="/static/signin.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="front-bg">
+		<!--<img class="front-image" src="/static/images/login_bkg_work_desk.jpg">-->
+	</div>
+	<div class="container block">
+
+		<form class="form-signin centered" method="post" action="j_security_check">
+			<!-- Modal -->
+			<div>
+				<div>
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title"></h4>
+						</div>
+						<div class="modal-body">
+							<fieldset>
+								<div class="form-group">
+									<label for="inputEmail" class="pull-left"><small>Email address</small></label>
+									<div class="clearfix"></div>
+									<input type="text" class="form-control" id="username" name="j_username" placeholder="Enter email">
+								</div>
+								<div class="form-group">
+									<label for="inputPassword" class="pull-left"><small>Password</small></label>
+									<div class="clearfix"></div>
+									<input type="password" class="form-control" id="password" name="j_password" placeholder="Password">
+								</div>
+							</fieldset> <!-- /.fieldset form elements -->
+						</div>
+						<div class="modal-footer">							
+							<input type="submit"  class="btn btn-info btn-block" value="Login" />
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</form>
+		<footer>
+			<p class="pull-left"><a href="#"><small>Help</small></a> | <a href="#"><small>Privacy Policy</small></a> | <a href="#"><small>Terms of use</small></a></p>
+			<p class="pull-right"><small>Copyright © 2013, Crexendo Inc. All Rights Reserved.</small></p>
+		</footer>
+	</div> <!-- /container -->
+	"src/main/webapp/static/login.html"
+	<script src="/static/js/jquery-1.10.2.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('form input').first().focus();
+		})
+	</script>
+</body>
+</html>

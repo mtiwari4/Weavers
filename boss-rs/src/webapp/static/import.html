@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Import to builder</title>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<script type="text/javascript">
+	function OnSubmitForm()
+	{
+		var fileName = document.getElementById("inputFile");
+		//var url = document.getElementById("urlSiteExport");
+		var accountId = document.getElementById("accountId");
+		if(!accountId.value)		{
+			return false;
+		}
+		document.myform.action ="/api/0.2/account/"+accountId.value+"/templates/template/external/upload";
+		return true;
+	}
+	</script>
+	<style>
+	body {
+		padding-top: 40px;
+		padding-bottom: 40px;
+		background-color: #ccc;
+	}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form enctype="multipart/form-data" name="myform" role="form" method="POST" onsubmit="return OnSubmitForm();">
+			<div class="form-group">
+				<label for="accountId">Account ID</label>
+				<input type="account" class="form-control" id="accountId" placeholder="Enter your account id">
+			</div>
+			<!--<div class="form-group">
+				<label for="urlSiteExport">The site url to export: format {url : External url}</label>
+				<input type="url" class="form-control" id="urlSiteExport" placeholder="Enter site url: format {url : External url}">
+			</div>
+			<hr>
+			<p class="help-block">OR</p>
+			<hr>-->
+			<div class="form-group">
+				<label for="exampleInputFile">Zip for to import</label>
+				<input name="data" type="hidden" value='{"name":"helloJim"}'>
+				<input name="uploadfile" type="file" id="inputFile" size="500">
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>	
+</body>
+</html>

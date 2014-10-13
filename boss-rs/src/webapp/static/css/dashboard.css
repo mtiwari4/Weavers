@@ -1,0 +1,197 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+	padding-top: 50px;
+	padding-bottom: 20px;
+	background-color: #f6f6f8;
+	font-family: 'proxima-nova', 'Varela Round', sans-serif;
+}
+
+/* Set widths on the navbar form inputs since otherwise they're 100% wide */
+.navbar-form input[type="text"],
+.navbar-form input[type="password"] {
+	width: 180px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.panel {
+	border-radius: 0px;
+	color: #747577;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	border: 0px;
+}
+
+.btn {
+	border-radius: 0px;
+	background-color: #29abe2;
+	color: #ffffff;
+}
+
+.btn-teal {
+	border-radius: 0px;
+	background-color: #33caab;
+	color: #ffffff;
+}
+
+.dashboard-sidenav .row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.dashboard-sidenav .row .row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.dashboard-sidebar .nav .nav > li > a {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 30px;
+	font-size: 90%;
+}
+.dashboard-sidebar .nav > li > a:hover, .dashboard-sidebar .nav > li > a:focus {
+	text-decoration: none;
+	background-color: #e5e3e9;
+	border-right: 1px solid #dbd8e0;
+}
+.dashboard-sidebar .nav > li > a {
+	display: block;
+	color: #716b7a;
+	padding: 5px 20px;
+}
+
+.dashboard-sidebar .nav > .active > a, .dashboard-sidebar .nav > .active:hover > a, .dashboard-sidebar .nav > .active:focus > a {
+  font-weight: 500;
+  /*color: #563d7c;*/
+  background-color: #F0F0F0;
+}
+
+.panel > .panel-heading{
+	background-color: #29abe2;
+	border-radius: 0px;
+}
+.panel > .panel-heading, .panel > .panel-heading a {
+	color: #ffffff;
+	font-size: 26px;
+}
+
+.row-top-margin {
+	/*margin-top: 30px;*/
+	/*margin-left: 6px;*/
+}
+
+.dashboard-sidenav {
+	border-left: 1px solid #f7f5fa;
+}
+
+.pin-btn {
+	position: absolute;
+	right: 0px;
+	bottom: 20px;
+}
+
+.title {
+	background-color: #eee;
+}
+.show-grid [class^="col-"] {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-top: 15px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+	/* Let the jumbotron breathe */
+	.jumbotron-one {
+		margin-top: 60px;
+		border-radius: 0px;
+		background-color: #ffffff;
+	}
+	/* Remove padding from wrapping element since we kick in the grid classes here */
+	.body-content {
+		padding: 0;
+	}
+}
+
+.account-listing li {
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.account-listing a, .account-loading {
+	text-align: center;
+}
+
+.thumbnail .template-select, .thumbnail .template-preview {
+	display: none;
+	height: 20%;
+	position: absolute;
+	left: 35%;
+	width: 30%;
+	z-index: 3;
+}
+
+.thumbnail .template-preview {
+	top: 25%;
+}
+.thumbnail .template-select {
+	top: 50%;
+}
+
+.thumbnail:hover .template-select, .thumbnail:hover .template-preview {
+	display: inherit;
+}
+
+.preview {
+	/*width: 512px;*/
+	height: 288px;
+	position: relative ;
+	box-shadow:0px 2px 7px #cccccc;
+/*	border-image: url("chrome.png") ;
+*/}
+.preview-margin {
+	margin-bottom: 10px;
+}
+
+.preview img {
+	width: 512px;
+	height: 288px;
+	position: relative;
+	z-index: 2;
+}
+.preview .loading {
+	position: absolute;
+	font-size:50px;
+	top: 120px;
+	left: 234px;
+	z-index: 1;
+}
+
+h5 {
+	text-align: justify;
+	text-transform:capitalize;
+	font-family: 'proxima-nova', 'Varela Round', sans-serif;
+}
+
+.template-header{
+	color: #33caab;
+	
+}
+
+.icon-spin {
+	/* fixes an off-center gear */
+	-webkit-transform-origin: 50% 49%;
+			transform-origin: 50% 49%;
+}
+
+.blue-badge{
+	background-color: #29abe2;
+}
