@@ -10,7 +10,7 @@
 	<!-- Enabling Spring MVC configuration through annotations -->
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler/>
-	<context:component-scan base-package="boss.boss_rs" />
+	<context:component-scan base-package="boss.boss_controller" />
 	 
 	<!-- Defining which view resolver to use -->
 	<bean id="viewResolver"

@@ -25,7 +25,7 @@
 	 <import resource="spring-security-context.xml" /> 
 
 	
-	<context:component-scan base-package="boss.boss-rs" >
+	<context:component-scan base-package="boss" >
 			<!--  <context:exclude-filter type="regex" 
 			expression="com.crexendo.builder.service.authentication.*" />  -->
 	</context:component-scan>

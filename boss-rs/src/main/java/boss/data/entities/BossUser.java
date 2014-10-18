@@ -12,8 +12,8 @@ public class BossUser {
 
 	@Id
     @Column(name = "ID", nullable = false)
-    private String id;
-    @Column(name = "USER_NAME", nullable = false)
+    private long id;
+    @Column(name = "USER_NAME",nullable = false)
     private String name;
     @Column(name = "PASSWORD", nullable = false)
     private String password;
@@ -22,11 +22,11 @@ public class BossUser {
     @Column(name = "SSN")
     private String ssn; 
     
-    public String getId() {
+    public long getId() {
 		return id;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setId(long userId) {
+		this.id = userId;
 	}
 	public String getName() {
 		return name;

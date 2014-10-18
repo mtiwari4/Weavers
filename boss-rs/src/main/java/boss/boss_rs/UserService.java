@@ -2,6 +2,9 @@ package boss.boss_rs;
 
 import java.io.IOException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -27,9 +30,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import boss.data.entities.BossAccount;
+import boss.data.repositories.BossUserRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -37,8 +44,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @Path("/{apiVersion}/externalLogin")
 public class UserService {
 
+	@PersistenceUnit(unitName = "DS_MASTER")
+	protected EntityManagerFactory	emf;
+	
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
+	
+	@Autowired
+	private BossUserRepository userRepo;
+	
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +64,61 @@ public class UserService {
 			log.trace("Time to execute getTree Service : {}ms", watch.getTime());
 		}
 		return Response.status(Response.Status.OK).build();
+	}
+	
+	
+	@GET
+	@Path("/user/{userName}/account")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAccountDetails(@PathParam("apiVersion") String apiVersion,@PathParam("userName") String userName, @DefaultValue("true") @QueryParam("cache") boolean cache) throws JsonProcessingException {
+		StopWatch watch = new StopWatch();
+		watch.start();
+
+		EntityManager em = emf.createEntityManager();
+		if (log.isDebugEnabled()) {
+			log.trace("Time to execute getTree Service : {}ms", watch.getTime());
+		}
+//		if (!accountValidator.validateAccount(accountId)) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity(accountValidator.getResponse(accountId)).build();
+//		}
+		int userId=2;
+		BossUserRepository userRepo = new BossUserRepository();
+BossAccount accountDetails =  userRepo.getUserAccountDetails(em, userId);
+
+		watch.stop();
+		if (log.isDebugEnabled()) {
+			log.trace("Time to execute ACCOUNTDETAILS for a USER : {}ms", watch.getTime());
+		}
+		return Response.status(Response.Status.OK).entity(accountDetails).build();
+
+	}
+
+	
+	@GET
+	@Transactional
+	@Path("/user/{userName}/accountBalance")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAccountBalance(@PathParam("apiVersion") String apiVersion,@PathParam("userName") String userName, @DefaultValue("true") @QueryParam("cache") boolean cache) throws JsonProcessingException {
+		StopWatch watch = new StopWatch();
+		watch.start();
+
+		EntityManager em = emf.createEntityManager();
+		if (log.isDebugEnabled()) {
+			log.trace("Time to execute getTree Service : {}ms", watch.getTime());
+		}
+//		if (!accountValidator.validateAccount(accountId)) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity(accountValidator.getResponse(accountId)).build();
+//		}
+		long accNo=746353;
+		//BossUserRepository userRepo = new BossUserRepository();
+double accountBalance =  userRepo.account(accNo);
+
+		watch.stop();
+		if (log.isDebugEnabled()) {
+			log.trace("Time to execute ACCOUNTDETAILS for a USER : {}ms", watch.getTime());
+		}
+		return Response.status(Response.Status.OK).entity(accountBalance).build();
+
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/login/**")
