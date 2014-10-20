@@ -1,56 +1,36 @@
 package boss.data.repositories;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Calendar;
+import org.hibernate.Query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
+import java.sql.*;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.xml.stream.XMLStreamException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.ejb.QueryImpl;
-import org.hibernate.internal.SQLQueryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import boss.data.entities.BossAccount;
-import boss.data.entities.BossUser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-//@Component
+import boss.data.entities.BossAccount;
+import boss.data.entities.BossExtTransaction;
+import boss.data.entities.BossUser;
+
 @Repository
 public class  BossUserRepository{
-	private static final Logger log = LoggerFactory
-			.getLogger(BossUserRepository.class);
+	//private static final Logger log = LoggerFactory
+		//	.getLogger(BossUserRepository.class);
 
 	@Value("test")
 	protected String tableSchema;
 
-	//@Autowired
-    //private BossUser userDetails;
-	//@Autowired
-	//private EntityObjectMapper mapper;
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -97,53 +77,26 @@ public class  BossUserRepository{
 			e1.printStackTrace();
 		};
 
-        long userId =  UUID.randomUUID().getMostSignificantBits();
-		//int userID = LoginDbManager.generateUserID();
-
-		//if(LoginDbManager.createLoginDetails(userID, pwd, pwdSalt,customerType, session)){	
-
-			//LoggingUtil.logUserInfo(userID + "","New customer's login details created");			
-
-			//int accountNo = AccountDbManager.generateAccountNo();
+       // long userId =  UUID.randomUUID().getMostSignificantBits();
 		
-			
-			//Calendar c = Calendar.getInstance(); 
-			//c.setTime(new Date()); 
-			//c.add(Calendar.YEAR, 3);
-			//Date dt = c.getTime();
-			//cardEntity.setCardExpiratrionDate(dt);
-
-			
-				//LoggingUtil.logUserInfo(userID + "","New customer's credit card numbers created");
 
 				BossUser customerEntity = new BossUser();
-				customerEntity.setId(userId);
-				//customerEntity.setAddress(address);
-				//customerEntity.setContactNumber(contactNumber);
-				//customerEntity.setCustomerType(customerType);
+				//customerEntity.setId(userId);
+				
 				customerEntity.setEmail(emailID);
-				//customerEntity.setLastname(lastName);
-				//customerEntity.setFirstname(firstName);
+				
                 
 				try {
 
 					session.save(customerEntity);
-	
-					//LoggingUtil.logUserInfo(userID + "","New customer details created");
+					
                     long accountNo = UUID.randomUUID().getMostSignificantBits();;
 					BossAccount accountEntity = new BossAccount();
 					accountEntity.setAccountId(accountNo);
-					accountEntity.setAccountType("SAVINGS");
-					accountEntity.setUserId(userId);
-					accountEntity.setBalance(5000);
-
-					/*if(saveAccountDetails(accountEntity,session)){
-						EMailUtil emailUtil = new EMailUtil();
-						emailUtil.createMailContentForCustomer(userId,emailUtil.setupEMailClient(), emailID);
-						//LoggingUtil.logUserInfo(userID + "","New customer's Account numbers created");
-						transaction.commit();
-						return userId;
-					}*/
+					//accountEntity.setAccountType("SAVINGS");
+					//accountEntity.setUserId(userId);
+					//accountEntity.setBalance(5000);
+				
 
 					transaction = session.beginTransaction();
 					session.save(customerEntity);
@@ -163,164 +116,420 @@ public class  BossUserRepository{
 		
 		return 0;
 	}
+
 /*
-	public static int SignUpCustomer(String name, String lastname,
-			String address, String emailID, String contactNumber,
-			char customerType, String password) {
-
-		SignUpEntity customerEntity = new SignUpEntity();
-		//customerEntity.setId(1223);
-		customerEntity.setAddress(address);
-		customerEntity.setContact(contactNumber);
-		customerEntity.setCustomerType(customerType);
-		customerEntity.setEmailId(emailID);
-		customerEntity.setLastName(lastname);
-		customerEntity.setFirstName(name);
-		customerEntity.setCreationStatus("Pending");
-		//Get a Password and Salt for the generated string.
-		List<String> hashedPwdAndSalt = EncryptDigest.getHashedPwdAndSalt(password);
-		String passwordDB = "";
-		String pwdSaltDB = "";
-		if(hashedPwdAndSalt != null)
-		{
-			passwordDB = hashedPwdAndSalt.get(0);
-			pwdSaltDB = hashedPwdAndSalt.get(1);
-		}
-		
-		customerEntity.setPassword(passwordDB);
-		customerEntity.setPwdsalt(pwdSaltDB);
-
-		Session session = null;
-		Transaction transaction = null;
-
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
-			transaction = session.beginTransaction();
-			session.save(customerEntity);
-			transaction.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			//transaction.rollback();
-			return 0;
-		} finally {
-			session.flush();
-			session.close();
-		}
-
-		return 0;
-	}
-
+----------------------------------------------	
+External User View Account Details
+Author:Praneeth
+-----------------------------------------------
 */
-	
-	public BossAccount getUserAccountDetails(EntityManager em, int userId) {
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		
-		
-	//BigDecimal m_accountId = new BigDecimal(accountId);
-	//BigDecimal m_resourceId = new BigDecimal(resourceId);
-
-	String sqlQuery = "from BOSS_ACCOUNT ar where ar.user_id = :m_userId";
-	//sqlQuery = sqlQuery + " and ar.id = :m_resourceId";
-    
-	BossAccount accDet = null;
-	try {
-		Query resourceQuery = em.createQuery(sqlQuery);
-		resourceQuery.setParameter("m_userId", userId);
-		//resourceQuery.setParameter("m_resourceId", m_resourceId);
-		accDet = (BossAccount) resourceQuery.getSingleResult();
-	} catch (Exception e) {
-		log.error("error : {}", e.getMessage(), e.getStackTrace());
-	} finally {
-	}
-	return accDet;
-	}
-	
-
+@SuppressWarnings("unchecked")
 @Transactional
-	public synchronized double account(long accountId)
-	{
-		Session session = this.sessionFactory.getCurrentSession();
-		BossAccount accnt = (BossAccount) session.get(BossAccount.class,
-				accountId); 
-		return accnt.getBalance();
-	}
+public synchronized List<BossAccount> viewaccountdetails(String username)
+{
+	
+	Session session = this.sessionFactory.openSession();
 
+	String hib = "FROM BossAccount WHERE UNAME = :username";	
+
+	org.hibernate.Query que = session.createQuery(hib);
+
+	que.setParameter("username", username);
+
+	List<BossAccount> results = que.list();
+
+	return results;
+}
+
+/*
+----------------------------------------------	
+External User View Profile Details
+Author:Praneeth
+-----------------------------------------------
+*/
+@SuppressWarnings("unchecked")
+@Transactional
+public synchronized List<BossUser> viewprofiledetails(String username)
+{
+	
+	Session session = this.sessionFactory.openSession();
+
+	String hib = "FROM BossUser WHERE UNAME = :username";
+
+	org.hibernate.Query que = session.createQuery(hib);
+	
+	que.setParameter("username", username);
+
+	List<BossUser> results = que.list();
+
+	return results;
+}
+
+/*
+----------------------------------------------	
+External User View Transaction Details
+Author:Praneeth
+-----------------------------------------------
+*/
 
 @SuppressWarnings("unchecked")
 @Transactional
-public synchronized List<BossUser> viewaccountdetails(String username)
+public synchronized List<BossExtTransaction> viewtransactiondetails(String username)
 {
 	
-Session session = this.sessionFactory.openSession();
+	Session session = this.sessionFactory.openSession();
 
-String hql = "FROM BossUser WHERE USER_NAME = :username";
+	String hib = "FROM BossExtTransaction WHERE UNAME = :username";
 
-Query query = (Query) session.createQuery(hql);
-query.setParameter("username", username);
+	org.hibernate.Query que = session.createQuery(hib);
+	
+	que.setParameter("username", username);
 
-List<BossUser> results = ((SQLQueryImpl) query).list();
+	List<BossExtTransaction> results = que.list();
 
-return results;
+	return results;
 }
+
+/*
+----------------------------------------------	
+External User Credit Function
+Author:Praneeth
+-----------------------------------------------
+*/
+
 @SuppressWarnings("unchecked")
 @Transactional
-public synchronized boolean approve(int rd)
+public synchronized boolean credit(double amount,String username)
 {
 	boolean status=false;
+	
 	Session session = this.sessionFactory.getCurrentSession();
-	
-	String hql = "FROM Bossupdate WHERE REQUESTID = :req";
+			
+	String hib = "FROM BossAccount WHERE UNAME = :username";
 
-	Query query = (Query) session.createQuery(hql);
-	query.setParameter("req", rd);
-	//List<Bossupdate> userList = query.list();
-	//Bossupdate accnts = userList.get(0);
+	Query que = session.createQuery(hib);
 	
+	que.setParameter("username", username);
 	
-	//if(accnts.getStatus()=='a')
-	if (true)
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+
+	double oldbal=accnts.getAccountbal();
+			
+	double total=amount+oldbal;
+	
+	String hibs = "UPDATE BossAccount set ACCTBAL =:Balances WHERE UNAME =:Username";
+	
+	que = session.createQuery(hibs);
+	
+	que.setParameter("Balances",total);
+	
+	que.setParameter("Username",username);
+
+	int result = que.executeUpdate();
+	
+			
+	if (result==1)
 	{
-	hql = "UPDATE BossUser set  address= :address "  + 
-            "WHERE userid = :AccountID";
-	 query = (Query) session.createQuery(hql);
-	//query.setParameter("address",accnts.getName());
-	//query.setParameter("AccountID", accnts.getId());
-
-	query.executeUpdate();
-	
-status=true;
+		status=true;
+		
 	}
-else
+	else
+	
+	status=false;
+				
+return status;
+	}
+
+/*
+----------------------------------------------	
+External User Credit Transaction
+Author:Praneeth
+-----------------------------------------------
+*/
+
+@SuppressWarnings("unchecked")
+public synchronized boolean saveTranscredit(double amount,String username,String status)
 {
-status=false;		
+	boolean b=true;
+	
+	Session session = this.sessionFactory.openSession();
+	
+	session.beginTransaction();
+	
+	String hib = "FROM BossAccount WHERE UNAME =:use";
+		
+	Query que = session.createQuery(hib);
+	
+	que.setParameter("use", username);
+	
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+	
+	long accid=accnts.getAccountId();
+	
+	BossExtTransaction bet=new BossExtTransaction();
+	
+	bet.setTransamt(amount);
+	
+	bet.setTransdate(new Date());
+	
+	bet.setTransdesc("Credited money");
+	
+	bet.setTransfrom(accid);
+	
+	bet.setTransto(accid);
+	
+	bet.setTranstype("money");
+	
+	bet.setUsername(username);
+	
+	bet.setTransstatus(status);
+	
+	session.save(bet);
+	
+	session.getTransaction().commit();
+	
+	return b;
 }
-	return status;
-}
+
+/*
+----------------------------------------------	
+External User Debit Transaction
+Author:Praneeth
+-----------------------------------------------
+*/
+
+@SuppressWarnings("unchecked")
 @Transactional
-public synchronized boolean updateaccount(long accountID,double balance)
+public synchronized boolean saveTransdebit(double amount,String username,String status)
+{
+boolean b=true;
+	
+	Session session = this.sessionFactory.openSession();
+	
+	session.beginTransaction();
+	
+	String hib = "FROM BossAccount WHERE UNAME =:use";
+		
+	Query que = session.createQuery(hib);
+	
+	que.setParameter("use", username);
+	
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+	
+	long accid=accnts.getAccountId();
+	
+	BossExtTransaction bet=new BossExtTransaction();
+	
+	bet.setTransamt(amount);
+	
+	bet.setTransdate(new Date());
+	
+	bet.setTransdesc("Debited money");
+	
+	bet.setTransfrom(accid);
+	
+	bet.setTransto(accid);
+	
+	bet.setTranstype("money");
+	
+	bet.setUsername(username);
+	
+	bet.setTransstatus(status);
+	
+	session.save(bet);
+	
+	session.getTransaction().commit();
+	
+	return b;	
+}
+
+
+/*
+----------------------------------------------	
+External User Debit Function
+Author:Praneeth
+-----------------------------------------------
+*/
+
+@SuppressWarnings("unchecked")
+@Transactional
+public synchronized boolean debit(double amount,String username)
 {
 	boolean status=false;
+	
 	Session session = this.sessionFactory.getCurrentSession();
-	BossAccount accnt = (BossAccount) session.get(BossAccount.class,accountID);
-	double oldbal=accnt.getBalance();
-	double newbal=balance;
-	double total=newbal+oldbal;
-	String hql = "UPDATE BossAccount set balance = :Balance "  + 
-            "WHERE account_id = :AccountID";
-	org.hibernate.Query query = session.createQuery(hql);
-	query.setParameter("Balance",total);
-	query.setParameter("AccountID", accountID);
+	
+	String hib = "FROM BossAccount WHERE UNAME = :username";
 
-	int result = query.executeUpdate();
+	Query que = session.createQuery(hib);
+	
+	que.setParameter("username", username);
+	
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+
+	double oldbal=accnts.getAccountbal();
+		
+	double total=oldbal-amount;
+	
+	String hibs = "UPDATE BossAccount set ACCTBAL =:Balances WHERE UNAME =:username";
+	
+	que = session.createQuery(hibs);
+	
+	que.setParameter("Balances",total);
+	
+	que.setParameter("username",username);
+
+	int result = que.executeUpdate();
+	
 	if (result==1)
 	{
 		status=true;
 	}
-else
-	status=false;
+	
+	else
+	
+		status=false;
 	
 return status;
 	}
+
+/*
+----------------------------------------------	
+External User Funds Transfer
+Author:Praneeth
+-----------------------------------------------
+*/
+
+@SuppressWarnings("unchecked")
+@Transactional
+public synchronized boolean fundtransfer(long account,double amount,String username)
+{
 	
+	boolean status=false;
+	
+	Session session = this.sessionFactory.getCurrentSession();
+	
+	String boss4 = "FROM BossAccount WHERE UNAME = :username";
+
+	Query que = session.createQuery(boss4);
+	
+	que.setParameter("username", username);
+	
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+
+	double fromaccount=accnts.getAccountbal();
+			
+	String boss2 = "FROM BossAccount WHERE ACCTNUM = :account";
+	
+	que = session.createQuery(boss2);
+	
+	que.setParameter("account",account);
+	
+	List<BossAccount> accountList = que.list();
+	
+	BossAccount accnt = accountList.get(0);
+	
+	double toaccount=accnt.getAccountbal();
+	
+	double fromamount=fromaccount-amount;
+	
+	double toamount=toaccount+amount;
+	
+	String boss = "UPDATE BossAccount set ACCTBAL =:Balances WHERE UNAME =:Username";
+	
+	que = session.createQuery(boss);
+	
+	que.setParameter("Balances",fromamount);
+	
+	que.setParameter("Username",username);
+
+	int result1 = que.executeUpdate();
+	
+	String boss5 = "UPDATE BossAccount set ACCTBAL =:Balances WHERE ACCTNUM = :account";
+	
+	que = session.createQuery(boss5);
+	
+	que.setParameter("Balances",toamount);
+	
+	que.setParameter("account",account);
+
+	int result2 = que.executeUpdate();
+	
+	
+	if (result1==1 && result2==1)
+	{
+		status=true;
+	}
+	else
+		status=false;
+	
+return status;
+}
+
+/*
+----------------------------------------------	
+External User Funds Transfer Transactions
+Author:Praneeth
+-----------------------------------------------
+*/
+
+@SuppressWarnings("unchecked")
+@Transactional
+public synchronized boolean transactionFunds(long account,double amount,String name,String status)
+{
+	boolean b=true;
+	
+	Session session=this.sessionFactory.openSession();
+	
+	session.beginTransaction();
+	
+	String hq="FROM BossAccount WHERE UNAME  =:name";
+	
+	Query que=session.createQuery(hq);
+	
+	que.setParameter("name",name);
+		
+	List<BossAccount> userList = que.list();
+	
+	BossAccount accnts = userList.get(0);
+	
+	long fromaccntnum=accnts.getAccountId();
+	
+	long toaccntnum=account;
+	
+	BossExtTransaction bet=new BossExtTransaction();
+	
+	bet.setTransamt(amount);
+	
+	bet.setTransdate(new Date());
+	
+	bet.setTransdesc("Transfer");
+	
+	bet.setTransfrom(fromaccntnum);
+	
+	bet.setTransto(toaccntnum);
+	
+	bet.setUsername(name);
+	
+	bet.setTransstatus(status);
+	
+	bet.setTranstype("money");
+	
+	session.save(bet);
+	
+	session.getTransaction().commit();
+		
+	return b;
+}
 
 }

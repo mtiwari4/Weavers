@@ -1,96 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-                http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	
-	<!-- Enabling Spring beans auto-discovery -->
-	<context:component-scan base-package="boss" />
+		<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/extuser**" access="hasRole('ROLE_USER')" />
 
-  	<context:property-placeholder order="1" location="/WEB-INF/config.properties" ignore-unresolvable="true" /> 
-
-	<!-- Enabling Spring MVC configuration through annotations -->
-	<mvc:annotation-driven />
-	<mvc:default-servlet-handler/>
-
-	<!-- Defining which view resolver to use -->
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
-	<!--  
-	<bean id="concurrentSessionFilter"
-		class="org.springframework.security.web.session.ConcurrentSessionFilter">
-		<constructor-arg>
-			<bean class="org.springframework.security.core.session.SessionRegistryImpl" />
-		</constructor-arg>
-	</bean>
-	
-	<bean id="keychainUserDetailsService"
-		class="com.crexendo.auth.service.KeychainAuthenticatedGrantedAuthoritiesUserDetailsService"/>
-
-	<bean id="keychainAuthenticationProvider"
-		class="com.crexendo.auth.provider.KeychainAuthenticationProvider">
-		<property name="preAuthenticatedUserDetailsService" ref="keychainUserDetailsService"/>
-		<property name="throwExceptionWhenTokenRejected" value="false"/>
-	</bean>
-
-    <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="keychainAuthenticationProvider"/>
-    </security:authentication-manager>
-
-	<bean id="http403EntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
-	
-	<bean id="authenticationDetailsSource" class="com.crexendo.auth.details.KeychainAuthenticationDetailsSource">
-	
-	</bean>
-	<bean id="keychainAuthenticatedProcessingFilter" class="com.crexendo.auth.filter.KeychainAuthenticatedProcessingFilter">
-		<property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
-		<property name="authenticationManager" ref="authenticationManager"/>
-		<property name="continueFilterChainOnUnsuccessfulAuthentication" value="true"/>
-	</bean>
-	<bean id="keychainSessionInitiationFilter" class="com.crexendo.auth.filter.KeychainSessionInitiationFilter"/>
-	<bean id="keychainRoleVerificationFilter" class="com.crexendo.auth.filter.KeychainRoleVerificationFilter"/>
-	-->
-	
-	 <!-- enable use-expressions -->
-	<security:http auto-config="true" use-expressions="true">
-		<security:intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
-		
-		<!-- access denied page -->
-		<security:access-denied-handler error-page="/403"/>
-		<security:form-login 
+		<form-login 
 		    login-page="/login" 
-		    default-target-url="/welcome" 
+		    default-target-url="/welcome"
 			authentication-failure-url="/login?error" 
-			username-parameter="user_name"
+			username-parameter="username"
 			password-parameter="password" />
-		<security:logout logout-success-url="/login?logout"  />
-		<!-- enable csrf protection -->
-	</security:http>
-	
-	<!-- Select users and user_roles from database -->
-	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:jdbc-user-service data-source-ref="pooledDataSource"
+		<logout logout-success-url="/login?logout" />
+		
+		<session-management >
+		        <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+            	</session-management>
+            			
+	</http>
+
+	<authentication-manager>
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="pooledDataSource"
 				users-by-username-query=
-					"select user_name, password, enabled from BOSS_USER where user_name=?"
+					"select username,password,enabled from users where username=?"
 				authorities-by-username-query=
-					"select user_name, role from BOSS_ROLES where user_name =?  " />
-		</security:authentication-provider>
-	</security:authentication-manager>
-	<!-- 
-	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
-		<constructor-arg>
-			<list>
-				<security:filter-chain pattern="/" filters="none" />
-			</list>
-		</constructor-arg>
-	</bean>
- -->
-</beans>
+					"select username, role from user_roles where username =? " />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

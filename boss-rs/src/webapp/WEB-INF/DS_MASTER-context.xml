@@ -18,7 +18,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/test" />
 		<property name="username" value="root" />
-		<property name="password" value="rishabh" />
+		<property name="password" value="praneeth" />
 		<!-- these are C3P0 properties
 		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
 		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
